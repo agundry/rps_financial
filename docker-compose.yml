@@ -1,0 +1,14 @@
+version: "3"
+
+services:
+  rps-db:
+    image: library/mysql:5.7
+    volumes:
+      - ./db/scripts:/docker-entrypoint-initdb.d
+    ports:
+      - "127.0.0.1:13306:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: 'my-secret-pw'
+      MYSQL_DATABASE: rps
+      MYSQL_USER: 'rps'
+      MYSQL_PASSWORD: 'rps_admin'
