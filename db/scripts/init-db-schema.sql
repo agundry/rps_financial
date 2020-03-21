@@ -30,8 +30,8 @@ CREATE TABLE `expenses` (
   `austin_throw` varchar(10) NOT NULL,
   `sam_throw` varchar(10) NOT NULL,
   `winner` varchar(10) NOT NULL,
-  `cost` decimal(10,2) NOT NULL,
-  `created_at` int(11) NOT NULL,
+  `cost` int(11) NOT NULL COMMENT 'value in cents',
+  `created_at` int(11) NOT NULL COMMENT 'time in epoch seconds',
   PRIMARY KEY (`id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 ROW_FORMAT=COMPRESSED;
 
