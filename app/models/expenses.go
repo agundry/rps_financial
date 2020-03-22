@@ -1,7 +1,7 @@
 package models
 
 import (
-	"../util"
+	"../../util"
 )
 
 type Expense struct {

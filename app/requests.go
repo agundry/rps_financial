@@ -1,4 +1,4 @@
-package api
+package app
 
 type ExpenseRequest struct {
 	AustinThrow	string 	`json:"austin_throw"`

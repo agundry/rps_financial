@@ -1,43 +1,26 @@
 package main
 
 import (
-	"encoding/json"
-	"fmt"
 	"github.com/gorilla/mux"
-	"io/ioutil"
 	"log"
 	"net/http"
 
-	"./api"
-	"./models"
-	"./util"
+	"./app"
+	"./db"
 )
 
-var allExpenses []models.Expense
-
-func createExpense(w http.ResponseWriter, r *http.Request) {
-	var expenseRequest api.ExpenseRequest
-	reqBody, err := ioutil.ReadAll(r.Body)
+func main() {
+	database, err := db.InitDbConnection()
 	if err != nil {
-		fmt.Fprintf(w, "New expenses need a hand for both players and a cost")
+		log.Fatal("Database connection failed: %s", err.Error())
 	}
 
-	// TODO validate request inputs
-	// Parse request into expense
-	json.Unmarshal(reqBody, &expenseRequest)
-	austinHand, err := util.HandFromString(expenseRequest.AustinThrow)
-	samHand, err := util.HandFromString(expenseRequest.AustinThrow)
-	// TODO handle errors
-	var expense models.Expense = models.NewExpense(austinHand, samHand, expenseRequest.Cost)
-	allExpenses = append(allExpenses, expense)
+	app := &app.App{
+		Router:   mux.NewRouter().StrictSlash(true),
+		Database: database,
+	}
 
-	w.WriteHeader(http.StatusCreated)
+	app.SetupRouter()
 
-	json.NewEncoder(w).Encode(allExpenses)
-}
-
-func main() {
-	router := mux.NewRouter().StrictSlash(true)
-	router.HandleFunc("/expenses", createExpense)
-	log.Fatal(http.ListenAndServe(":8080", router))
+	log.Fatal(http.ListenAndServe(":8080", app.Router))
 }
