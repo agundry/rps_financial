@@ -1,7 +1,7 @@
 package models
 
 import (
-	"../../util"
+	"github.com/agundry/rps_financial/util"
 	"database/sql"
 	"log"
 )
