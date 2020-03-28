@@ -1,7 +1,7 @@
 package main
 
 import (
-	"./app"
+	"github.com/agundry/rps_financial/app"
 )
 
 func main() {
