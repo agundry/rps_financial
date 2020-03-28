@@ -8,3 +8,7 @@ require (
 	github.com/go-sql-driver/mysql v1.5.0
 	github.com/gorilla/mux v1.7.4
 )
+
+replace github.com/agundry/rps_financial/app/models => ./models
+
+replace github.com/agundry/rps_financial/util => ../util

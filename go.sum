@@ -1,5 +1,3 @@
-github.com/agundry/rps_financial/app v0.1.0 h1:hHjmVV2hT2VkegX1TstDalAVKV9rPJwkEzkTg6UwZVA=
-github.com/agundry/rps_financial/app v0.1.0/go.mod h1:B5kLDq86xmJnRgXxcFukDjIeU/wn2rE/54rxA88VucI=
 github.com/agundry/rps_financial/app/models v0.0.0-20200328204548-87fb24729743 h1:rMU1bUY2RVL9LaP+WwXGDln2GbJ42E8hxhPAK77/cM4=
 github.com/agundry/rps_financial/app/models v0.0.0-20200328204548-87fb24729743/go.mod h1:HzC1rufzsA8OeK1iL3oOmoB1LU+2NANG3QbUkMJ7pTM=
 github.com/agundry/rps_financial/util v0.1.0 h1:i1vwaY5AHtI4Spzs1Tc8L5LTyT7vsAHdF2nxYw2EWC8=
