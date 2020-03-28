@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"strconv"
 
-	"../util"
-	"./models"
+	"github.com/agundry/rps_financial/util"
+	"github.com/agundry/rps_financial/app/models"
 
 	_ "github.com/go-sql-driver/mysql"
 )

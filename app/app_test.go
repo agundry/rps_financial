@@ -7,9 +7,9 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"os"
-	"../app"
-	//"strconv"
 	"testing"
+
+	"github.com/agundry/rps_financial/app"
 )
 
 var application app.App

@@ -1,8 +1,8 @@
 package models_test
 
 import (
-	"../../util"
-	"../models"
+	"github.com/agundry/rps_financial/util"
+	"github.com/agundry/rps_financial/app/models"
 	"testing"
 )
 
