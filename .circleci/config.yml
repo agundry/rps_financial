@@ -27,6 +27,7 @@ jobs:
       # Fetch dependencies
       - run: go get github.com/go-sql-driver/mysql
       - run: go get github.com/gorilla/mux
+      - run: go get github.com/jstemmer/go-junit-report
 
       #  CircleCi's Go Docker image includes netcat
       #  This allows polling the DB port to confirm it is open before proceeding
