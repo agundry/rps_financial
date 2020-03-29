@@ -1,0 +1,73 @@
+version: 2
+jobs:
+  build:
+    working_directory: go/src/github.com/agundry/rps_financial
+    docker:
+      - image: circleci/golang:1.13
+      - image: library/mysql:5.7
+        volumes:
+          - ./db/scripts:/docker-entrypoint-initdb.d
+        environment:
+          MYSQL_ROOT_PASSWORD: 'my-secret-pw'
+          MYSQL_DATABASE: rps
+          MYSQL_USER: 'rps'
+          MYSQL_PASSWORD: 'rps_admin'
+
+    environment: # environment variables for the build itself
+      TEST_RESULTS: /tmp/test-results # path to where test results will be saved
+
+    steps:
+      - checkout # check out source code to working directory
+      - run: mkdir -p $TEST_RESULTS # create the test results directory
+
+      - restore_cache: # restores saved cache if no changes are detected since last run
+          keys:
+            - rps-pkg-cache
+
+      # Fetch dependencies
+      - run: go mod download
+
+      #  CircleCi's Go Docker image includes netcat
+      #  This allows polling the DB port to confirm it is open before proceeding
+      - run:
+          name: Waiting for Mysql to be ready
+          command: |
+            for i in `seq 1 10`;
+            do
+              nc -z localhost 3306 && echo Success && exit 0
+              echo -n .
+              sleep 1
+            done
+            echo Failed waiting for Mysql && exit 1
+
+      - run:
+          name: Run tests
+          # Store the results of our tests in the $TEST_RESULTS directory
+          command: |
+            trap "go-junit-report <${TEST_RESULTS}/go-test.out > ${TEST_RESULTS}/go-test-report.xml" EXIT
+            make test | tee ${TEST_RESULTS}/go-test.out
+
+      - run: make # pull and build dependencies for the project
+
+      - save_cache: # Store cache in the /go/pkg directory
+          key: rps-pkg-cache
+          paths:
+            - "/go/pkg"
+
+      - run:
+          name: Start service
+          command: ./bin/rps_financial
+          background: true # keep service running and proceed to next step
+
+      - run:
+          name: Validate service is working
+          command: |
+            sleep 5
+            curl --retry 10 --retry-delay 1 -X GET --header "Content-Type: application/json" http://localhost:8080/expenses
+
+      - store_artifacts: # Upload test summary for display in Artifacts: https://circleci.com/docs/2.0/artifacts/
+          path: /tmp/test-results
+          destination: raw-test-output
+
+      - store_test_results: # Upload test results for display in Test Summary: https://circleci.com/docs/2.0/collect-test-data/
+          path: /tmp/test-results

@@ -1,7 +1,3 @@
-github.com/agundry/rps_financial/app/models v0.0.0-20200328204548-87fb24729743 h1:rMU1bUY2RVL9LaP+WwXGDln2GbJ42E8hxhPAK77/cM4=
-github.com/agundry/rps_financial/app/models v0.0.0-20200328204548-87fb24729743/go.mod h1:HzC1rufzsA8OeK1iL3oOmoB1LU+2NANG3QbUkMJ7pTM=
-github.com/agundry/rps_financial/util v0.1.0 h1:i1vwaY5AHtI4Spzs1Tc8L5LTyT7vsAHdF2nxYw2EWC8=
-github.com/agundry/rps_financial/util v0.1.0/go.mod h1:LwnO6gaUoGtEqkZIZ4ELiuL0lD8FsHjjw0uO1Wp2FJk=
 github.com/go-sql-driver/mysql v1.5.0 h1:ozyZYNQW3x3HtqT1jira07DN2PArx2v7/mN66gGcHOs=
 github.com/go-sql-driver/mysql v1.5.0/go.mod h1:DCzpHaOWr8IXmIStZouvnhqoel9Qv2LBy8hT2VhHyBg=
 github.com/gorilla/mux v1.7.4 h1:VuZ8uybHlWmqV03+zRzdwKL4tUnIp1MAQtp1mIFE1bc=
