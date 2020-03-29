@@ -1,4 +1,4 @@
-# rps_financial
+# rps_financial [![CircleCI Build Status](https://circleci.com/gh/agundry/rps_financial.svg?style=shield)](https://circleci.com/gh/agundry/rps_financial)
 Expense tracking app where all expenses are decided via rock, paper, or scissors.
 
 # Dev setup
