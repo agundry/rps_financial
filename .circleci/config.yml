@@ -25,7 +25,8 @@ jobs:
             - rps-pkg-cache
 
       # Fetch dependencies
-      - run: go mod download
+      - run: go get github.com/go-sql-driver/mysql v1.5.0
+      - run: go get github.com/gorilla/mux v1.7.4
 
       #  CircleCi's Go Docker image includes netcat
       #  This allows polling the DB port to confirm it is open before proceeding
