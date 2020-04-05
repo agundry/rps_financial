@@ -40,10 +40,21 @@ func (a *App) Run(addr string) {
 }
 
 func (app *App) initializeRoutes() {
+	app.Router.Methods("GET").Path("/healthcheck").HandlerFunc(app.healthcheck)
 	app.Router.Methods("GET").Path("/expenses").HandlerFunc(app.indexExpenses)
 	app.Router.Methods("POST").Path("/expenses").HandlerFunc(app.createExpense)
 	app.Router.Methods("GET").Path("/expenses/{id:[0-9]+}").HandlerFunc(app.getExpense)
 	app.Router.Methods("DELETE").Path("/expenses/{id:[0-9]+}").HandlerFunc(app.deleteExpense)
+}
+
+func (app *App) healthcheck(w http.ResponseWriter, r *http.Request) {
+	rows, err := app.Database.Query("SELECT 1")
+	if err != nil {
+		respondWithError(w, http.StatusInternalServerError, err.Error())
+		return
+	}
+
+	respondWithJSON(w, http.StatusOK, rows)
 }
 
 func (app *App) indexExpenses(w http.ResponseWriter, r *http.Request) {

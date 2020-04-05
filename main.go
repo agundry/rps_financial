@@ -2,15 +2,18 @@ package main
 
 import (
 	"github.com/agundry/rps_financial/app"
+	"github.com/agundry/rps_financial/config"
 )
 
 func main() {
+	cfg := config.Configure()
+
 	application := app.App{}
 	application.Initialize(
-		"root",
-		"my-secret-pw",
-		"localhost:3306",
-		"rps")
+		cfg.Db.Username,
+		cfg.Db.Password,
+		cfg.Db.Server,
+		cfg.Db.DbName)
 
-	application.Run(":8080")
+	application.Run(":" + cfg.Server.Port)
 }

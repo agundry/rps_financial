@@ -1,0 +1,8 @@
+server:
+  port: 8080
+
+db:
+  username: root
+  password: my-secret-pw
+  server: localhost:3306
+  db_name: rps

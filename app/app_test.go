@@ -63,6 +63,15 @@ func TestIndexExpensesEmptyTable(t *testing.T) {
 	}
 }
 
+func TestHealthcheck(t *testing.T) {
+	clearTable()
+
+	req, _ := http.NewRequest("GET", "/healthcheck", nil)
+	response := executeRequest(req)
+
+	checkResponseCode(t, http.StatusOK, response.Code)
+}
+
 func TestGetNonExistentExpense(t *testing.T) {
 	clearTable()
 
