@@ -58,7 +58,7 @@ jobs:
 
       - run:
           name: Start service
-          command: ./bin/rps_financial -config ./config/dev-config.yml
+          command: ./bin/rps_financial -config ./config/local-config.yml
           background: true # keep service running and proceed to next step
 
       - run:
