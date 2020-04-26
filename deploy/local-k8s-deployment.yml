@@ -16,7 +16,7 @@ metadata:
   name: mysql-service
 subsets:
   - addresses:
-      - ip: 192.168.77.1
+      - ip: 192.168.65.2         # This may change with each successive start of minikube, check host.docker.internal
     ports:
       - port: 3306
 ---
@@ -48,10 +48,16 @@ spec:
             initialDelaySeconds: 5
             periodSeconds: 15
             timeoutSeconds: 5
-          readinessProbe:          # To check if the Pod is ready to serve traffic or not
-            httpGet:
-              path: /readiness
-              port: 8080
-              scheme: HTTP
-            initialDelaySeconds: 5
-            timeoutSeconds: 1
+---
+apiVersion: v1
+kind: Service                    # Type of kubernetes resource
+metadata:
+  name: rps-financial-service   # Name of the resource
+spec:
+  type: NodePort                 # A port is opened on each node in your cluster via Kube proxy.
+  ports:                         # Take incoming HTTP requests on port 9090 and forward them to the targetPort of 8080
+    - name: http
+      port: 9090
+      targetPort: 8080
+  selector:
+    app: rps-financial           # Map any pod with label `app=rps-financial` to this service

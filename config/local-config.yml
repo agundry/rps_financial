@@ -4,5 +4,5 @@ server:
 db:
   username: root
   password: my-secret-pw
-  server: mysql-service:3306
+  server: localhost:3306
   db_name: rps

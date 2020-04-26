@@ -38,4 +38,4 @@ COPY --from=builder /rps_financial/config/dev-config.yml config.yml
 EXPOSE 8080
 
 # Command to run the executable
-CMD ["./rps_financial -config config.yml"]
+CMD ["./rps_financial", "-config", "config.yml"]

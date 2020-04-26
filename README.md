@@ -15,3 +15,39 @@ This is an api meant to enable tracking these games and the costs associated, ho
 # Dev setup
 
 Make sure docker and docker-compose are installed, then in the root directory run `docker-compose up -d` to initialize the database.
+
+### Single local instance
+
+Assuming the local db is already running
+
+`go mod download`
+
+`make`
+
+`./bin/rps_financial -config config/local-config.yml`
+
+### Local Kubernetes Cluster via Docker Image
+
+Start up minikube with docker driver
+
+`minikube start --driver=docker`
+
+Next, check what the host machine ip is in minikube
+
+`minikube ssh "host host.docker.internal"`
+
+You'll need to set the `addresses` ip for the mysql-service endpoint to this value in `local-k8s-deployment.yml`
+
+Create the kubernetes cluster
+
+`kubectl apply -f deploy/local-k8s-deployment.yml`
+
+The services should have started automatically
+
+Start a tunnel for the kubernetes service url
+
+`minikube service rps-financial-service --url`
+
+Test curl
+
+`curl <url>/expenses`
