@@ -6,6 +6,9 @@ default: build
 build:
 	go build -o bin/rps_financial main.go
 
+run-local:
+	./bin/rps_financial -config config/local-config.yml
+
 run:
 	go run main.go
 

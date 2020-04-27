@@ -10,12 +10,15 @@ import (
 	"testing"
 
 	"github.com/agundry/rps_financial/app"
+	"github.com/agundry/rps_financial/util"
 )
 
 var application app.App
 
 func TestMain(m *testing.M) {
 
+	var testLogger = util.NewLogger()
+	application.WithLogging(testLogger)
 	application.Initialize(
 		"root",
 		"my-secret-pw",

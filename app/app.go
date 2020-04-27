@@ -6,12 +6,11 @@ import (
 	"fmt"
 	"github.com/gorilla/mux"
 	"io/ioutil"
-	"log"
 	"net/http"
 	"strconv"
 
-	"github.com/agundry/rps_financial/util"
 	"github.com/agundry/rps_financial/app/models"
+	"github.com/agundry/rps_financial/util"
 
 	_ "github.com/go-sql-driver/mysql"
 )
@@ -19,6 +18,7 @@ import (
 type App struct {
 	Router   *mux.Router
 	Database *sql.DB
+	Logger 	 *util.StandardLogger
 }
 
 func (app *App) Initialize(user, password, serverName, dbName string) {
@@ -27,24 +27,40 @@ func (app *App) Initialize(user, password, serverName, dbName string) {
 	var err error
 	app.Database, err = sql.Open("mysql", connectionString)
 	if err != nil {
-		log.Fatal(err)
+		app.Logger.Fatal(err)
 	}
+	app.Logger.Infof("Successfully connected to mysql database at %s", serverName)
 
 	app.Router = mux.NewRouter().StrictSlash(true)
 
 	app.initializeRoutes()
+	app.Logger.Infof("Initialized Routes")
 }
 
-func (a *App) Run(addr string) {
-	log.Fatal(http.ListenAndServe(addr, a.Router))
+func (app *App) WithLogging(logger *util.StandardLogger) {
+	app.Logger = logger
+}
+
+func (app *App) Run(addr string) {
+	// Start the app, logging all requests
+	app.Logger.Fatal(http.ListenAndServe(addr, util.LogRequest(app.Logger, app.Router)))
 }
 
 func (app *App) initializeRoutes() {
+	app.Logger.Infof("Initializing routes")
+
 	app.Router.Methods("GET").Path("/healthcheck").HandlerFunc(app.healthcheck)
 	app.Router.Methods("GET").Path("/expenses").HandlerFunc(app.indexExpenses)
 	app.Router.Methods("POST").Path("/expenses").HandlerFunc(app.createExpense)
 	app.Router.Methods("GET").Path("/expenses/{id:[0-9]+}").HandlerFunc(app.getExpense)
 	app.Router.Methods("DELETE").Path("/expenses/{id:[0-9]+}").HandlerFunc(app.deleteExpense)
+
+	app.Router.Walk(func(route *mux.Route, router *mux.Router, ancestors []*mux.Route) error {
+		tpl, _ := route.GetPathTemplate()
+		met, _ := route.GetMethods()
+		app.Logger.Infof("Route: %s %s", tpl, met)
+		return nil
+	})
 }
 
 func (app *App) healthcheck(w http.ResponseWriter, r *http.Request) {
@@ -60,6 +76,7 @@ func (app *App) healthcheck(w http.ResponseWriter, r *http.Request) {
 func (app *App) indexExpenses(w http.ResponseWriter, r *http.Request) {
 	expenses, err := models.GetExpenses(app.Database)
 	if err != nil {
+		app.Logger.InternalServerError(err.Error())
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -71,7 +88,7 @@ func (app *App) createExpense(w http.ResponseWriter, r *http.Request) {
 	var expenseRequest ExpenseRequest
 	reqBody, err := ioutil.ReadAll(r.Body)
 	if err != nil {
-		fmt.Fprintf(w, "New expenses need a hand for both players and a cost")
+		app.Logger.BadRequestError("New expenses need a hand for both players and a cost")
 	}
 
 	// TODO validate request inputs
@@ -82,6 +99,7 @@ func (app *App) createExpense(w http.ResponseWriter, r *http.Request) {
 	var expense = models.ConstructExpense(austinHand, samHand, expenseRequest.Cost)
 
 	if err := expense.InsertExpense(app.Database); err != nil {
+		app.Logger.InternalServerError(err.Error())
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
@@ -93,6 +111,7 @@ func (app *App) getExpense(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
+		app.Logger.BadRequestError("Invalid expense ID")
 		respondWithError(w, http.StatusBadRequest, "Invalid expense ID")
 		return
 	}
@@ -103,6 +122,7 @@ func (app *App) getExpense(w http.ResponseWriter, r *http.Request) {
 		case sql.ErrNoRows:
 			respondWithError(w, http.StatusNotFound, "Expense not found")
 		default:
+			app.Logger.InternalServerError(err.Error())
 			respondWithError(w, http.StatusInternalServerError, err.Error())
 		}
 		return
@@ -115,12 +135,14 @@ func (app *App) deleteExpense(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
+		app.Logger.BadRequestError("Invalid expense ID")
 		respondWithError(w, http.StatusBadRequest, "Invalid Expense ID")
 		return
 	}
 
 	e := models.Expense{Id: id}
 	if err := e.DeleteExpense(app.Database); err != nil {
+		app.Logger.InternalServerError(err.Error())
 		respondWithError(w, http.StatusInternalServerError, err.Error())
 		return
 	}
