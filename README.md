@@ -51,3 +51,18 @@ Start a tunnel for the kubernetes service url
 Test curl
 
 `curl <url>/expenses`
+
+### Local Metrics
+
+If you want to see live metrics, you can start a local prometheus server and use the grafana docker container.
+
+Edit the [prometheus.yml](config/prometheus.yml) file to point to the url minikube rps-financial-service url.
+
+`prometheus --config.file="config/prometheus.yml"`
+
+Go to grafana at [localhost:3000](localhost:3000) 
+1. Add prometheus as a data source (source url `http://docker.for.mac.host.internal:9090`)
+2. Create a new dashboard, you can import from any of these options
+    * [Go Processes](https://grafana.com/grafana/dashboards/6671)
+    * [Go Runtime](https://grafana.com/grafana/dashboards/1144)
+    * [Go Metrics](https://grafana.com/grafana/dashboards/10826)

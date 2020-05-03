@@ -20,8 +20,8 @@ Tag the image
 
 Associate the tag
 
-`docker tag rps_financial agundry/rps_financial:1.0.0`
+`docker tag rps_financial agundry/rps_financial:<version>`
 
 Push the image
 
-`docker push agundry/rps_financial:1.0.0`
+`docker push agundry/rps_financial:<version>`

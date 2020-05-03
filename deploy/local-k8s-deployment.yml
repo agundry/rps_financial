@@ -36,7 +36,7 @@ spec:
     spec:                        # Spec for the container which will run in the Pod
       containers:
         - name: rps-financial
-          image: agundry/rps_financial:1.1.0
+          image: agundry/rps_financial:1.2.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8080  # Should match the port number that the Go application listens on

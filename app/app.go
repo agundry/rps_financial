@@ -13,6 +13,7 @@ import (
 	"github.com/agundry/rps_financial/util"
 
 	_ "github.com/go-sql-driver/mysql"
+	"github.com/prometheus/client_golang/prometheus/promhttp"
 )
 
 type App struct {
@@ -49,7 +50,13 @@ func (app *App) Run(addr string) {
 func (app *App) initializeRoutes() {
 	app.Logger.Infof("Initializing routes")
 
+	// Access to prometheus metrics
+	app.Router.Methods("GET").Path("/metrics").Handler(promhttp.Handler())
+
+	// Healthcheck for kubernetes
 	app.Router.Methods("GET").Path("/healthcheck").HandlerFunc(app.healthcheck)
+
+	// Application routes
 	app.Router.Methods("GET").Path("/expenses").HandlerFunc(app.indexExpenses)
 	app.Router.Methods("POST").Path("/expenses").HandlerFunc(app.createExpense)
 	app.Router.Methods("GET").Path("/expenses/{id:[0-9]+}").HandlerFunc(app.getExpense)

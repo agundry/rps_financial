@@ -12,3 +12,7 @@ services:
       MYSQL_DATABASE: rps
       MYSQL_USER: 'rps'
       MYSQL_PASSWORD: 'rps_admin'
+  grafana:
+    image: grafana/grafana:5.1.0
+    ports:
+      - 3000:3000
