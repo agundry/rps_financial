@@ -18,7 +18,7 @@ COPY . .
 
 # Build the Go app using makefile
 # RUN CGO_ENABLED=0 GOOS=linux GOARCH=amd64 go build -o bin/rps_financial main.go
-RUN make
+RUN make build-for-ubuntu-docker
 
 
 ######## Start a new stage from scratch #######
@@ -32,7 +32,7 @@ WORKDIR /root/
 
 # Copy the Pre-built binary file from the previous stage
 COPY --from=builder /rps_financial/bin/rps_financial .
-COPY --from=builder /rps_financial/config/dev-config.yml config.yml
+COPY --from=builder /rps_financial/config/prod-config.yml config.yml
 
 # Expose port 8080 to the outside world
 EXPOSE 8080

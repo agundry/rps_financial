@@ -27,6 +27,11 @@ func (app *App) Initialize(user, password, serverName, dbName string) {
 
 	var err error
 	app.Database, err = sql.Open("mysql", connectionString)
+
+	// the err value at this point is not enough to check for a valid connection
+	// err would only be non-null if there was an issue with the driver
+	err = app.Database.Ping()
+
 	if err != nil {
 		app.Logger.Fatal(err)
 	}

@@ -21,5 +21,8 @@ test-all:
 	export RPS_DB_NAME='rps'
 	@go test -v $(GOPACKAGES)
 
+build-for-ubuntu-docker:
+	GOOS=linux GOARCH=arm64 go build -o bin/rps_financial main.go
+
 build-docker-image:
 	docker build -f deploy/Dockerfile -t rps_financial .
