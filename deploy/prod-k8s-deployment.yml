@@ -16,7 +16,7 @@ metadata:
   name: mysql-service
 subsets:
   - addresses:
-      - ip: 192.168.1.16         # This may change with each successive start of minikube, check host.docker.internal
+      - ip: 192.168.1.16         # Raspberry pi
     ports:
       - port: 3306
 ---
@@ -36,7 +36,7 @@ spec:
     spec:                        # Spec for the container which will run in the Pod
       containers:
         - name: rps-financial
-          image: agundry/rps_financial:1.4.0
+          image: agundry/rps_financial:1.5.0
           imagePullPolicy: Always
           ports:
             - containerPort: 8080  # Should match the port number that the Go application listens on
@@ -62,9 +62,9 @@ metadata:
   name: rps-financial-service   # Name of the resource
 spec:
   type: NodePort                 # A port is opened on each node in your cluster via Kube proxy.
-  ports:                         # Take incoming HTTP requests on port 9090 and forward them to the targetPort of 8080
+  ports:                         # Take incoming HTTP requests on port 8000 and forward them to the targetPort of 8080
     - name: http
-      port: 9090
+      port: 8000
       targetPort: 8080
   selector:
     app: rps-financial           # Map any pod with label `app=rps-financial` to this service
