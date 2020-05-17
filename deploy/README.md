@@ -25,3 +25,13 @@ Associate the tag
 Push the image
 
 `docker push agundry/rps_financial:<version>`
+
+Running in prod
+
+`microk8s.start`
+
+`kubectl apply -f prod-k8s-deployment.yml`
+
+`sudo prometheus --config.file=prometheus.yml`
+
+`sudo service grafana-server start`

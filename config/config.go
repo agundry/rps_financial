@@ -31,6 +31,13 @@ func Configure() (*Config) {
 	}
 
 	cfg, err := NewConfig(cfgPath)
+
+	// In prod we'll use environment variables for the password
+	dbPassword, ok := os.LookupEnv("RPS_DB_PASSWORD")
+	if ok {
+		cfg.Db.Password = dbPassword
+	}
+
 	if err != nil {
 		log.Fatal(err)
 	}
